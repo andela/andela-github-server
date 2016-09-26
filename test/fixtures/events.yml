@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  gh_event_id: 
+  event_type: MyString
+  payload: 
+  public: false
+  event_created_at: 2016-09-23 01:00:36
+  user: one
+
+two:
+  gh_event_id: 
+  event_type: MyString
+  payload: 
+  public: false
+  event_created_at: 2016-09-23 01:00:36
+  user: two

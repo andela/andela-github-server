@@ -1,0 +1,2 @@
+json.stats do
+end
