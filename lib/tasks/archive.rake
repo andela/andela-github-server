@@ -1,6 +1,6 @@
 require 'json'
 Dir.chdir(File.dirname(__FILE__))
-events = JSON.parse(File.read('../../public/archive.json'))
+events = JSON.parse(File.read('../../public/archive.json')) if File.exist?('../../public/archive.json')
 
 namespace :archive do
   desc "Populate database with github archive data"
