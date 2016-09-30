@@ -3,7 +3,7 @@ class EventsController < ApplicationController
     @events = Event.where.not("repo_url like ?", "%andela%").where("repo_stars >= 2")
     last_updated = @events.order('event_created_at DESC').first.event_created_at
     last_updated_link = @events.order('event_created_at DESC').first.event_url
-    last_update_made_by = @events.order('event_created_at DESC').first.user 
+    last_update_made_by = @events.order('event_created_at DESC').first.user.username
     commits = @events.sum(:commits_count)
     merged = @events.where(merged: 't').pluck(:repo_url).size
     contributors = @events.uniq.pluck(:user_id).size
