@@ -1,8 +1,7 @@
 require 'json'
-require 'pry'
 Dir.chdir(File.dirname(__FILE__))
 # events = IO.readlines('../../public/archive.json')
-events = JSON.parse(File.read('../../public/archive.json'))
+# events = JSON.parse(File.read('../../public/archive.json'))
 
 namespace :archive do
   desc "Populate database with github archive data"
