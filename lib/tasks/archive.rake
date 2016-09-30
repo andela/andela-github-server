@@ -1,16 +1,15 @@
 require 'json'
 require 'pry'
 Dir.chdir(File.dirname(__FILE__))
-# events = IO.readlines('../../public/results.json')
+# events = IO.readlines('../../public/archive.json')
+events = JSON.parse(File.read('../../public/archive.json'))
 
 namespace :archive do
   desc "Populate database with github archive data"
   task populate: :environment do
       events.each do |event|
-        event = JSON.parse(event)
-        user = User.find_or_create_by(username: event['actor_login'])
+        user = User.find_or_create_by(username: event['author'])
         user_event = user.events.where(:gh_event_id => event['id'])
-        binding.pry
         if user_event.blank?
           user.events.create!(
             gh_event_id: event['id'], 

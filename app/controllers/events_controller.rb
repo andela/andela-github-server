@@ -1,16 +1,25 @@
 class EventsController < ApplicationController
   def index
-    last_updated = Event.order('event_created_at ASC').first.event_created_at
-    commits = Event.sum(:commits_count)
-    merged = Event.where(merged: 't').size
-    review_comments = Event.sum(:review_comments)
-    languages = Event.where('language IS NOT NULL').group(:language).size 
-    commits_by_language = Event.group(:language).sum(:commits_count) 
+    @events = Event.where.not("repo_url like ?", "%andela%").where("repo_stars >= 2")
+    last_updated = @events.order('event_created_at DESC').first.event_created_at
+    last_updated_link = @events.order('event_created_at DESC').first.event_url
+    last_update_made_by = @events.order('event_created_at DESC').first.user 
+    commits = @events.sum(:commits_count)
+    merged = @events.where(merged: 't').pluck(:repo_url).size
+    contributors = @events.uniq.pluck(:user_id).size
+    review_comments = @events.sum(:review_comments)
+    languages = @events.where('language IS NOT NULL').group(:language).size 
+    projects = @events.uniq.pluck(:repo_url).size
+    commits_by_language = @events.group(:language).sum(:commits_count) 
     render json: { 
       last_updated: last_updated, 
+      last_updated_link: last_updated_link,
+      last_update_made_by: last_update_made_by,
       stats: { 
         commits: commits,
         merged: merged,
+        projects: projects,
+        contributors: contributors,
         review_comments: review_comments,
         commits_by_language: commits_by_language
       },

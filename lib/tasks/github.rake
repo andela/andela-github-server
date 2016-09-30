@@ -18,7 +18,7 @@ namespace :github do
             gh_event_id: event.id, 
             event_type: event.type,  
             event_created_at: event.created_at,
-            event_url: event.payload.pull_request.url,
+            event_url: event.payload.pull_request.html_url,
             repo_url: event.payload.pull_request.base.repo.html_url,
             repo_stars: event.payload.pull_request.base.repo.stargazers_count,
             merged: event.payload.pull_request.merged,

@@ -8,7 +8,6 @@ gem 'puma', '~> 3.0'
 gem 'jbuilder', '~> 2.5'
 gem 'rack-cors'
 gem 'octokit', '~> 4.0'
-gem 'rack-cors', :require => 'rack/cors'
 group:production do 
   gem 'rails_12factor'
 end
