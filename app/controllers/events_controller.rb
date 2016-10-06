@@ -1,11 +1,11 @@
 class EventsController < ApplicationController
   def index
-    @events = Event.where.not("repo_url like ?", "%andela%").where("repo_stars >= 2")
+    @events = Event.where.not("repo_url like ?", "%andela%").where("repo_stars >= 2").where(merged: 't')
     last_updated = @events.order('event_created_at DESC').first.event_created_at
     last_updated_link = @events.order('event_created_at DESC').first.event_url
     last_update_made_by = @events.order('event_created_at DESC').first.user.username
     commits = @events.sum(:commits_count)
-    merged = @events.where(merged: 't').pluck(:repo_url).size
+    merged = @events.pluck(:repo_url).size
     contributors = @events.uniq.pluck(:user_id).size
     review_comments = @events.sum(:review_comments)
     languages = @events.where('language IS NOT NULL').group(:language).size 
