@@ -1,7 +1,7 @@
 class EventsController < ApplicationController
   def index
     @events = Event.where.not("repo_url like ?", "%andela%").where("repo_stars >= 2").where(merged: 't')
-    @top_events = Event.where.not("repo_url like ?", "%andela%").where("repo_stars >= 30")
+    @top_events = Event.where.not("repo_url like ?", "%andela%").where("repo_stars >= 30").where(merged: 't')
     last_updated = @top_events.order('event_created_at DESC').first.event_created_at
     last_updated_link = @top_events.order('event_created_at DESC').first.event_url
     last_update_made_by = @top_events.order('event_created_at DESC').first.user.username
