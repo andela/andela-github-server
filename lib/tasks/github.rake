@@ -4,7 +4,7 @@ gh = Octokit::Client.new \
   client_id: ENV['GITHUB_CLIENT_ID'], 
   client_secret: ENV['GITHUB_CLIENT_SECRET']
 
-gh.auto_paginate = true
+#gh.auto_paginate = true
 
 namespace :github do
   desc "Retrieve github data and store"
