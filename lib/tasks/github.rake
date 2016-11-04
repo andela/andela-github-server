@@ -1,6 +1,9 @@
 require "octokit"
 
-gh = Octokit::Client.new(:access_token => '7e561ebee894c52c7bcaa7a40616ba697a3845d3')
+gh = Octokit::Client.new \
+  client_id: ENV['GITHUB_CLIENT_ID'], 
+  client_secret: ENV['GITHUB_CLIENT_SECRET']
+
 gh.auto_paginate = true
 
 namespace :github do
