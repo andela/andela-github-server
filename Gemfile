@@ -6,6 +6,7 @@ gem 'puma', '~> 3.0'
 gem 'jbuilder', '~> 2.5'
 gem 'rack-cors'
 gem 'octokit', '~> 4.0'
+gem 'figaro'
 
 group :development, :test do
   gem 'byebug', platform: :mri
