@@ -1,4 +1,5 @@
 require "octokit"
+require 'uri'
 
 gh = Octokit::Client.new \
   client_id: ENV['GITHUB_CLIENT_ID'], 
@@ -46,6 +47,16 @@ namespace :github do
             language: event.payload.pull_request.base.repo.language
           )
         end
+      end
+    end
+  end
+
+  task update_pull_status: :environment do
+    User.all.each do |user|
+      user.events.each do |event|
+        repo = URI.parse(event.repo_url).path.match(/(?<=\/).+/).to_s
+        pr = event.event_url.match(/(\d)*\Z/).captures.join
+        event.update_attribute(:merged, gh.pull_merged?(repo, pr).to_s)
       end
     end
   end
