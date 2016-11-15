@@ -1,8 +1,8 @@
 class EventsController < ApplicationController
   def index
     @events = Event.where.not("repo_url like ?", "%andela%").where("repo_stars >= 2").where(merged: 'true')
-    @top_event = Event.where.not("repo_url like ?", "%andela%").where("repo_stars >= 30").where(merged: "true").order('updated_at DESC').first
-    last_updated = @top_event.updated_at
+    @top_event = Event.where.not("repo_url like ?", "%andela%").where("repo_stars >= 30").where(merged: "true").order(event_created_at: :desc).first
+    last_updated = @top_event.event_created_at
     last_updated_link = @top_event.event_url
     last_update_made_by = @top_event.user.username
     commits = @events.sum(:commits_count)
