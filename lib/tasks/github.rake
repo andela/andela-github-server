@@ -28,6 +28,7 @@ namespace :github do
             comments: event.payload.pull_request.comments,
             review_comments: event.payload.pull_request.review_comments,
             commits_count: event.payload.pull_request.commits,
+            org: event.payload.pull_request.base.repo.login,
             language: event.payload.pull_request.base.repo.language
           )
         else
