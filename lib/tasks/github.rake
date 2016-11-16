@@ -100,4 +100,10 @@ namespace :github do
       end
     end
   end
+
+  task prune_members: :environment do
+    User.all.each do |user|
+      User.destroy(user.id) unless gh.user user.username 
+    end
+  end
 end
