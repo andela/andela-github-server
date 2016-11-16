@@ -52,7 +52,7 @@ namespace :github do
   end
 
   task update_pull_status: :environment do
-    User.all.each do |user|
+    User.all[192...384].each do |user|
       user.events.each do |event|
         repo = URI.parse(event.repo_url).path.match(/(?<=\/).+/).to_s
         pr = event.event_url.match(/(\d)*\Z/).captures.join
