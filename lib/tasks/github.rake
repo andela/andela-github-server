@@ -54,7 +54,6 @@ namespace :github do
   task retrieve_events: :environment do
     User.all.each do |user|
       events = gh.user_events user.username, :per_page => 100
-      binding.pry
       events.each do |event|
         next unless event.type == 'PullRequestEvent'
         user_event = user.events.where(:gh_event_id => event.id)
