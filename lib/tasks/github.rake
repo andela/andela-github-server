@@ -85,7 +85,7 @@ namespace :events do
   task update: :environment do
     User.all.each do |user|
       puts "Looking up #{user.username}"
-      user.events.where(created_at: 24.hours.ago..Time.now).each do |event|
+      user.events.where('updated_at > ?', 24.hours.ago).each do |event|
         puts "Updating #{event.repo_url} for #{user.username}"
         repo = URI.parse(event.repo_url).path.match(/(?<=\/).+/).to_s
         pr = event.event_url.match(/(\d)*\Z/).captures.join
