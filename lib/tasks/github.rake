@@ -27,11 +27,12 @@ namespace :members do
   desc "Prune organization members"
   task prune: :environment do
     User.all.each do |user|
-      puts "#{user.username} is getting pruned"
+      username = user.username
+      puts "#{username} is getting pruned"
       begin 
         User.destroy(user.id) unless gh.user user.username 
+        puts "#{username} has been deleted"
       rescue Octokit::Error
-        User.destroy(user.id)
         next
       end
     end
@@ -68,17 +69,11 @@ namespace :events do
         else
           puts "Updating #{event.type} event for #{user.username}"
           event.update(
-            event_type: event.type,
-            event_created_at: event.payload.pull_request.updated_at,
-            event_url: event.payload.pull_request.html_url,
-            repo_url: event.payload.pull_request.base.repo.html_url,
             repo_stars: event.payload.pull_request.base.repo.stargazers_count,
             merged: gh.pull_merged?(event.repo.name, event.payload.pull_request.number).to_s,
             comments: event.payload.pull_request.comments,
             review_comments: event.payload.pull_request.review_comments,
             commits_count: event.payload.pull_request.commits,
-            org: event.payload.pull_request.base.repo.login,
-            language: event.payload.pull_request.base.repo.language
           )
         end
       end
@@ -90,8 +85,8 @@ namespace :events do
   task update: :environment do
     User.all.each do |user|
       puts "Looking up #{user.username}"
-      user.events.each do |event|
-        puts "Updaing #{event.repo_url} for #{user.username}"
+      user.events.where(updated_at: 24.hours.ago..Time.now).each do |event|
+        puts "Updating #{event.repo_url} for #{user.username}"
         repo = URI.parse(event.repo_url).path.match(/(?<=\/).+/).to_s
         pr = event.event_url.match(/(\d)*\Z/).captures.join
         event.update_attribute(:merged, gh.pull_merged?(repo, pr).to_s)
