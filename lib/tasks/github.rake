@@ -9,16 +9,19 @@ gh = Octokit::Client.new \
 
 gh = Octokit::Client.new(:access_token => ENV['GITHUB_ACCESS_TOKEN']) 
 
-# gh.auto_paginate = true
+gh.auto_paginate = true
 
 namespace :members do
   desc "Retrieve organization members"
   task retrieve: :environment do 
-    members = gh.organization "andela", :per_page => 100
-    unless gh.last_response.rels[:next].nil?
-      members.concat gh.last_response.rels[:next].get.data 
-      members.each { |member| User.find_or_create_by(username: member.login) }
-    end
+    members = gh.organization_members "andela", :per_page => 100
+    puts "Retrieved #{members.size}"
+    # unless gh.last_response.rels[:next].nil?
+    #  members.concat gh.last_response.rels[:next].get.data 
+    #  members.each { |member| User.find_or_create_by(username: member.login) }
+    # end
+    members.each { |member| User.find_or_create_by(username: member.login) }
+    puts "members:retrieve done"
   end
 
   desc "Prune organization members"
@@ -32,6 +35,7 @@ namespace :members do
         next
       end
     end
+    puts "members:prune done"
   end
 end
 
@@ -79,16 +83,20 @@ namespace :events do
         end
       end
     end
+    puts "events:retrieve done"
   end
 
   desc "Update event statuses"
   task update: :environment do
     User.all.each do |user|
+      puts "Looking up #{user.username}"
       user.events.each do |event|
+        puts "Updaing #{event.repo_url} for #{user.username}"
         repo = URI.parse(event.repo_url).path.match(/(?<=\/).+/).to_s
         pr = event.event_url.match(/(\d)*\Z/).captures.join
         event.update_attribute(:merged, gh.pull_merged?(repo, pr).to_s)
       end
     end
+    puts "events:update done"
   end
 end
