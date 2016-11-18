@@ -30,9 +30,11 @@ namespace :members do
       username = user.username
       puts "#{username} is getting pruned"
       begin 
-        User.destroy(user.id) unless gh.user user.username 
-        puts "#{username} has been deleted"
+        gh.user user.username 
       rescue Octokit::Error
+        puts "#{username} doesn't exist, deleting..."
+        User.destroy(user.id)
+      else
         next
       end
     end
