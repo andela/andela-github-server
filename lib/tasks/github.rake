@@ -58,7 +58,7 @@ namespace :events do
             event_url: event.payload.pull_request.html_url,
             repo_url: event.payload.pull_request.base.repo.html_url,
             repo_stars: event.payload.pull_request.base.repo.stargazers_count,
-            merged: gh.pull_merged?(event.repo.name, event.payload.pull_request.number).to_s,
+            merged: event.payload.pull_request.merged.to_s,
             comments: event.payload.pull_request.comments,
             review_comments: event.payload.pull_request.review_comments,
             commits_count: event.payload.pull_request.commits,
@@ -70,7 +70,7 @@ namespace :events do
           puts "Updating #{event.type} event for #{user.username}"
           event.update(
             repo_stars: event.payload.pull_request.base.repo.stargazers_count,
-            merged: gh.pull_merged?(event.repo.name, event.payload.pull_request.number).to_s,
+            merged: event.payload.pull_request.merged.to_s,
             comments: event.payload.pull_request.comments,
             review_comments: event.payload.pull_request.review_comments,
             commits_count: event.payload.pull_request.commits,
