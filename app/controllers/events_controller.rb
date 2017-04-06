@@ -29,4 +29,14 @@ class EventsController < ApplicationController
       }
     }, serializer: nil
   end
+
+  def show 
+    @user = User.find_by_username(params[:username]) if params[:username]
+    render json: @user.events
+  end
+
+  def all 
+    render json: Event.all
+  end
+
 end
